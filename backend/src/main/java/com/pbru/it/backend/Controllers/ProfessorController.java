@@ -1,14 +1,20 @@
 package com.pbru.it.backend.Controllers;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.pbru.it.backend.DTO.ProfessorRequest;
+import com.pbru.it.backend.DTO.ProfessorResponse;
 import com.pbru.it.backend.Models.Professor;
 import com.pbru.it.backend.Services.ProfessorService;
+
+import jakarta.validation.Valid;
 
 
 @RestController
@@ -19,8 +25,12 @@ public class ProfessorController {
     private ProfessorService professorService;
 
     @GetMapping
-    public ResponseEntity<List<Professor>> findAll() {
-        return ResponseEntity.ok(professorService.findAll());
+    public ResponseEntity<Page<ProfessorResponse>> findAll(
+        @RequestParam(required = false) String nameTh,
+        @RequestParam(required = false) String major,
+        @PageableDefault(size = 8) Pageable pageable
+    ) {
+        return ResponseEntity.ok(professorService.findAll(nameTh, major, pageable));
     }
     
     @GetMapping("/{id}")
@@ -31,7 +41,7 @@ public class ProfessorController {
     }
     
     @PostMapping("/register")
-    public ResponseEntity<Professor> register(@RequestBody Professor professor) {
+    public ResponseEntity<Professor> register(@Valid @ModelAttribute ProfessorRequest professor) {
         return ResponseEntity.status(201).body(professorService.save(professor));
     }
 

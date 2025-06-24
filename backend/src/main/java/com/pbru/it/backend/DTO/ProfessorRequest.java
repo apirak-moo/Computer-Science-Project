@@ -1,20 +1,17 @@
 package com.pbru.it.backend.DTO;
 
-public record ProfessorRequest(String email, String password, ProfessorRole role) {
-    public enum ProfessorRole {
-        DEAN("คณบดี"),
-        ASSOCIATE_DEAN("รองคณบดี"),
-        HEAD_OF_DEPARTMENT("ประธานสาขาวิชา"),
-        FACULTY_MEMBER("อาจารย์ประจำสาขาวิชา");
+import java.util.UUID;
 
-        private final String displayName;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-        ProfessorRole(String displayName) {
-            this.displayName = displayName;
-        }
-
-        public String getDisplayName() {
-            return displayName;
-        }
-    }
+public record ProfessorRequest(
+        UUID id,
+        @Email @Size(min = 1, max = 100) @NotBlank String email,
+        @NotBlank String password,
+        @NotNull ProfessorRole role,
+        @NotNull @Valid ProfessorProfileRequest profile) {
 }

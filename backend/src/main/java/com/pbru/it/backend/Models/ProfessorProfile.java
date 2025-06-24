@@ -2,11 +2,14 @@ package com.pbru.it.backend.Models;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -35,7 +38,12 @@ public class ProfessorProfile {
     @Column(name = "professor_profile_image", nullable = false)
     private String image;
 
-    @OneToOne(mappedBy = "professorProfile")
+    @Column(name = "professor_major", nullable = false, length = 100)
+    private String major;
+
+    @OneToOne
+    @JoinColumn(name = "professor_id")
+    @JsonIgnore
     private Professor professor;
 
 }

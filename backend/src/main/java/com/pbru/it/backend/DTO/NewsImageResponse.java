@@ -1,6 +1,5 @@
 package com.pbru.it.backend.DTO;
 
-import com.pbru.it.backend.Models.NewsImage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

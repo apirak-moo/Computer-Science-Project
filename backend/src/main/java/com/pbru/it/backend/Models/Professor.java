@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.pbru.it.backend.DTO.ProfessorRole;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -40,16 +40,17 @@ public class Professor implements UserDetails {
     private UUID id;
 
     @Email(message = "Invalid email")
-    @Column(name = "professor_email", length = 100, nullable = false)
+    @Column(name = "professor_email", length = 100, unique = true , nullable = false)
     private String email;
 
     @Column(name = "professor_password", columnDefinition = "TEXT", nullable = false)
     private String password;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "professor_profile_id", referencedColumnName = "professor_profile_id")
-    @JsonIgnoreProperties("professor")
-    private ProfessorProfile professorProfile;
+    @Column(name = "professor_role")
+    private ProfessorRole role;
+
+    @OneToOne(mappedBy = "professor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ProfessorProfile profile;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
