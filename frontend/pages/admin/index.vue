@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { h } from 'vue'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -23,6 +22,11 @@ import {
     History,
     ChevronRight,
 } from 'lucide-vue-next'
+
+definePageMeta({
+  middleware: 'auth',
+  roles: ['Administrator']
+})
 
 // Define the structure for our management items
 const managementItems = [

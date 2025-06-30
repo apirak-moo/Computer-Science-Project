@@ -1,11 +1,9 @@
-version: '3.8'
-
 services:
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: nuxt-frontend
+    container_name: bun-nuxt-frontend
     ports:
       - "3000:3000"
     depends_on:
@@ -16,7 +14,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: springboot-backend
+    container_name: java-springboot-backend
     ports:
       - "8080:8080"
     depends_on:
@@ -29,7 +27,7 @@ services:
       SPRING_JPA_SHOW_SQL: ${SPRING_JPA_SHOW_SQL}
   db:
     image: postgres
-    container_name: posgresql-database
+    container_name: rdbms-posgresql-database
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -38,7 +36,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pg-it-data:/var/lib/postgresql/data
+      - pg-pbru-it-data:/var/lib/postgresql/data
 
   adminer:
     image: adminer
@@ -50,4 +48,4 @@ services:
       - backend
 
 volumes:
-  pg-it-data:
+  pg-pbru-it-data:

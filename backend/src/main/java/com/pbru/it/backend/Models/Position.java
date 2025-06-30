@@ -20,10 +20,10 @@ public class Position {
     @Column(name = "position_id")
     private int id;
 
-    @Column(name = "position_name_th", length = 50, nullable = false)
+    @Column(name = "position_name_th", length = 100, nullable = false)
     private String nameTh;
 
-    @Column(name = "position_name_en", length = 50, nullable = false)
+    @Column(name = "position_name_en", length = 100, nullable = false)
     private String nameEn;
 
 }

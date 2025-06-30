@@ -52,7 +52,7 @@ public class ProfessorController {
     // }
 
     @PutMapping
-    public ResponseEntity<Professor> editProfessor(@PathVariable UUID id, @RequestBody Professor professor){
+    public ResponseEntity<Professor> editProfessor(@PathVariable UUID id, @RequestBody ProfessorRequest professor){
         return ResponseEntity.ok(professorService.updateById(id, professor));
     }
 

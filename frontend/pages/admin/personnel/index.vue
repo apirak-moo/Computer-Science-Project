@@ -1,12 +1,19 @@
 <script setup lang="ts">
 import type { PaginatedResponse } from '~/types/PaginatedResponse';
 import type { Professor } from '~/types/Professor';
+import PersonnelCard from '~/layouts/PersonnelCard.vue';
 
+definePageMeta({
+    middleware: 'auth',
+    roles: ['Administrator', 'Dean of the Faculty of Information Technology']
+})
+
+const token = useCookie('token')
 
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
 
-const { data: professors , status: professorStatus , refresh } = await useFetch<PaginatedResponse<Professor>>(`${apiBase}/professor`);
+const { data: professors, status: professorStatus, refresh } = await useFetch<PaginatedResponse<Professor>>(`${apiBase}/professor`);
 console.log(professors.value)
 
 const currentPage = ref<number>(1);
@@ -39,32 +46,13 @@ watch([currentPage, search], () => {
                 </NuxtLink>
             </CardContent>
 
-            <CardContent class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4 bg-gray-50 dark:bg-gray-900">
-
-                <div v-if="professorStatus === 'pending'">
-                    Loading ...
-                </div>
-
-                <NuxtLink v-else v-for="professor in professors?.content" :key="professor.id" :to="`/admin/professor/${professor.id}`"
-                    class="group block rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                    <div class="aspect-w-16 aspect-h-9">
-                        <NuxtImg
-                            class="w-full aspect-[6/3] object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
-                            :src="`${apiBase}/images/${professor.profile?.image ?? ''}`" width="600" height="400"
-                            format="webp" quality="80" :alt="professor.profile?.nameTh" :placeholder="'/dfimage.svg'"
-                            loading="lazy" />
-                    </div>
-
-                    <div class="p-4 sm:p-5">
-                        <h1
-                            class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white group-hover:text-sky-600 transition-colors duration-300 line-clamp-2">
-                            {{ professor.profile?.nameTh }}
-                        </h1>
-                    </div>
-                </NuxtLink>
-
+            <CardContent class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <PersonnelCard v-for="person in professors?.content" :key="person.id" :id="person.id"
+                    :name="person.profile?.nameTh" :image-url="`${apiBase}/images/${person.profile?.image ?? ''}`"
+                    :positions="person.positions.map(p => p.nameTh)"
+                    :specialties="person.profile?.major ? [person.profile.major] : []" />
             </CardContent>
-
+            <!-- 
             <Pagination v-slot="{ page }" v-model:page="currentPage" :items-per-page="itemsPerPage"
                 :total="news?.totalElements ?? 0">
                 <PaginationContent v-slot="{ items }">
@@ -75,10 +63,10 @@ watch([currentPage, search], () => {
                             {{ item.value }}
                         </PaginationItem>
                     </template>
-                    <PaginationEllipsis :index="4" />
-                    <PaginationNext />
-                </PaginationContent>
-            </Pagination>
+<PaginationEllipsis :index="4" />
+<PaginationNext />
+</PaginationContent>
+</Pagination> -->
 
         </Card>
 

@@ -1,8 +1,8 @@
 package com.pbru.it.backend.Services;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -48,7 +48,7 @@ public class NewsService {
         news.setLinkName(newsDemoRequest.getLinkName());
         news.setLink(newsDemoRequest.getLink());
 
-        Set<NewsImage> newsImages = new HashSet<>();
+        List<NewsImage> newsImages = new ArrayList<>();
 
         for (MultipartFile item : newsDemoRequest.getImages()) {
             NewsImage newsImage = new NewsImage();

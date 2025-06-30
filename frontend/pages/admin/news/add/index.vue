@@ -6,6 +6,13 @@ import CardContent from '~/components/ui/card/CardContent.vue';
 import { Save } from 'lucide-vue-next';
 import type { NewsRequest } from '~/types/NewsRequest';
 
+definePageMeta({
+  middleware: 'auth',
+  roles: ['Administrator', 'Associate Dean of the Faculty of Information Technology']
+})
+
+const token = useCookie('token')
+
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
 
@@ -20,6 +27,7 @@ const news = ref<NewsRequest>({
 const ImageFile = ref<File[] | null>(null)
 
 async function submitForm() {
+    
     const formData = new FormData()
     formData.append('title', news.value?.title ?? '')
     formData.append('linkName', news.value?.linkName ?? '')
@@ -34,7 +42,10 @@ async function submitForm() {
 
     await $fetch(`${apiBase}/news`,{
         method: 'POST',
-        body: formData
+        body: formData,
+        headers:{
+            Authorization: `Bearer ${token.value}`
+        },
     })
 
     ImageFile.value = null
@@ -82,23 +93,6 @@ async function submitForm() {
                 </div>
             </CardHeader>
         </Card>
-
-        <!-- <Carousel class="relative w-full">
-            <CarouselContent v-if="news?.newsImages.length > 3">
-                <CarouselItem class="basis-2/3 md:basis-1/3" v-for="image in news?.newsImages" :key="image.id">
-                    <NuxtImg class="rounded-xl" :src="`${apiBase}/images/${image.path}`" :alt="`${image.id}`"
-                        width="1920" height="1080" />
-                </CarouselItem>
-            </CarouselContent>
-            <CarouselContent v-else>
-                <CarouselItem class="flex justify-center" v-for="image in news?.newsImages" :key="image.id">
-                    <NuxtImg class="rounded-xl" :src="`${apiBase}/images/${image.path}`" :alt="`${image.id}`"
-                        width="1280" height="720" />
-                </CarouselItem>
-            </CarouselContent>
-            <CarouselPrevious v-if="news?.newsImages.length > 0" />
-            <CarouselNext v-if="news?.newsImages.length > 0" />
-        </Carousel> -->
 
         <Card class="mt-4">
             <CardHeader>

@@ -29,6 +29,13 @@ import type { PaginatedResponse } from '~/types/PaginatedResponse'
 import type { BranchRequest } from '~/types/BranchRequest'
 import type { Major } from '~/types/Major'
 
+definePageMeta({
+  middleware: 'auth',
+  roles: ['Administrator', 'Head of Department']
+})
+
+const token = useCookie('token')
+
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
 
@@ -116,6 +123,7 @@ function handleFileCoursesChange(event: Event) {
 }
 
 async function submitForm() {
+    
     const formData = new FormData()
 
     formData.append('majorId', String(form.value.majorId))
@@ -145,6 +153,9 @@ async function submitForm() {
     await $fetch(`${apiBase}/branch`, {
         method: 'POST',
         body: formData,
+        headers:{
+            Authorization: `Bearer ${token.value}`
+        },
     })
 
     ImageFile.value = null

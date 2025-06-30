@@ -11,6 +11,13 @@ import {
     CardTitle,
 } from '@/components/ui/card'
 
+definePageMeta({
+  middleware: 'auth',
+  roles: ['Administrator', 'Associate Dean of the Faculty of Information Technology']
+})
+
+const token = useCookie('token')
+
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
 
@@ -32,8 +39,6 @@ const { data: news, status: newsStatus, refresh } = await useFetch<PaginatedResp
     }))
 })
 
-const siteUrl = "http://localhost:3000"
-
 useHead(() => ({
     htmlAttrs: {
         lang: 'th'
@@ -45,19 +50,19 @@ useHead(() => ({
         { property: 'og:title', content: `ข่าวสารและกิจกรรม | คณะเทคโนโลยีสารสนเทศ ม.ราชภัฏเพชรบุรี` },
         { property: 'og:description', content: 'ติดตามข่าวสารล่าสุด กิจกรรม และประกาศต่างๆ ของคณะเทคโนโลยีสารสนเทศ ม.ราชภัฏเพชรบุรี' },
         { property: 'og:type', content: 'website' },
-        { property: 'og:url', content: `${siteUrl}/news` }, // URL จริงของหน้านี้
-        { property: 'og:image', content: `${siteUrl}/images/og-image-it-pbru.jpg` }, // รูป Default ของคณะสำหรับแชร์
+        { property: 'og:url', content: `${apiBase}/news` }, // URL จริงของหน้านี้
+        { property: 'og:image', content: `${apiBase}/images/og-image-it-pbru.jpg` }, // รูป Default ของคณะสำหรับแชร์
         // Twitter Card
         { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:title', content: `ข่าวสารและกิจกรรม | คณะเทคโนโลยีสารสนเทศ ม.ราชภัฏเพชรบุรี` },
         { name: 'twitter:description', content: 'ติดตามข่าวสารล่าสุด กิจกรรม และประกาศต่างๆ ของคณะเทคโนโลยีสารสนเทศ ม.ราชภัฏเพชรบุรี' },
-        { name: 'twitter:image', content: `${siteUrl}/images/og-image-it-pbru.jpg` }, // รูป Default ของคณะสำหรับแชร์
+        { name: 'twitter:image', content: `${apiBase}/images/og-image-it-pbru.jpg` }, // รูป Default ของคณะสำหรับแชร์
     ],
     link: [
         // Pagination SEO
-        { rel: 'canonical', href: `${siteUrl}/news` },
-        ...(currentPage.value > 1 ? [{ rel: 'prev', href: `${siteUrl}/news?page=${currentPage.value - 1}` }] : []),
-        ...(news.value && currentPage.value < news.value.totalPages ? [{ rel: 'next', href: `${siteUrl}/news?page=${currentPage.value + 1}` }] : []),
+        { rel: 'canonical', href: `${apiBase}/news` },
+        ...(currentPage.value > 1 ? [{ rel: 'prev', href: `${apiBase}/news?page=${currentPage.value - 1}` }] : []),
+        ...(news.value && currentPage.value < news.value.totalPages ? [{ rel: 'next', href: `${apiBase}/news?page=${currentPage.value + 1}` }] : []),
     ],
 
 }))

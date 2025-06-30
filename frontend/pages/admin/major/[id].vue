@@ -47,6 +47,13 @@ import type { Major } from '~/types/Major'
 import type { Degree } from '~/types/Degree'
 import type { Program } from '~/types/Program'
 
+definePageMeta({
+  middleware: 'auth',
+  roles: ['Administrator', 'Head of Department']
+})
+
+const token = useCookie('token')
+
 const route = useRoute()
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
@@ -213,6 +220,9 @@ async function submitForm() {
     await $fetch(`${apiBase}/major/${route.params.id}`, {
         method: 'PUT',
         body: formData,
+        headers:{
+            Authorization: `Bearer ${token.value}`
+        },
     })
 
     refresh()
@@ -226,6 +236,9 @@ async function deleteForm() {
     // ✅ ส่งไปยัง API
     await $fetch(`${apiBase}/major/${route.params.id}`, {
         method: 'DELETE',
+        headers:{
+            Authorization: `Bearer ${token.value}`
+        },
     })
 
     await navigateTo('/admin/major')

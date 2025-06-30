@@ -23,6 +23,13 @@ import {
 import type { PaginatedResponse } from '~/types/PaginatedResponse'
 import type { Major } from '~/types/Major'
 
+definePageMeta({
+    middleware: ['auth'],
+    roles: ['Administrator', 'Head of Department']
+})
+
+const token = useCookie('token')
+
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
 
@@ -58,6 +65,9 @@ const useUpdateMajor = async () => {
     await $fetch(`${apiBase}/major/${selectedMajor.value.id}`, {
         method: 'PATCH',
         query: { status },
+        headers:{
+            Authorization: `Bearer ${token.value}`
+        },
     })
 
     refresh()

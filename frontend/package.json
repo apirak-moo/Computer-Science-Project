@@ -1,6 +1,7 @@
 {
   "name": "nuxt-app",
   "dependencies": {
+    "@formkit/auto-animate": "^0.8.2",
     "@nuxt/content": "3.5.1",
     "@nuxt/eslint": "1.4.1",
     "@nuxt/fonts": "0.11.4",
@@ -14,6 +15,7 @@
     "@tanstack/vue-table": "^8.21.3",
     "@unhead/vue": "^2.0.3",
     "@vee-validate/zod": "^4.15.1",
+    "@vueuse/core": "^13.4.0",
     "@vueuse/motion": "^3.0.3",
     "@vueuse/nuxt": "^13.4.0",
     "class-variance-authority": "^0.7.1",

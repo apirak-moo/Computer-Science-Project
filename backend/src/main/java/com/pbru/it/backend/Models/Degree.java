@@ -37,4 +37,8 @@ public class Degree {
     @OneToMany(mappedBy = "degree", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Program> programs = new HashSet<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "degree", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProfessorEducationalQualification> qualifications = new HashSet<>();
+
 }

@@ -7,6 +7,13 @@ import type { News } from '~/types/News';
 
 import { Save, Trash2 } from 'lucide-vue-next';
 
+definePageMeta({
+  middleware: 'auth',
+  roles: ['Administrator', 'Associate Dean of the Faculty of Information Technology']
+})
+
+const token = useCookie('token')
+
 const route = useRoute()
 
 const config = useRuntimeConfig()
@@ -32,7 +39,10 @@ async function submitForm() {
 
     await $fetch(`${apiBase}/news/${news.value?.id}`,{
         method: 'PUT',
-        body: formData
+        body: formData,
+        headers:{
+            Authorization: `Bearer ${token.value}`
+        },
     })
 
     ImageFile.value = null
@@ -44,6 +54,9 @@ async function submitForm() {
 async function deleteForm() {
     await $fetch(`${apiBase}/news/${news.value?.id}`,{
         method: 'DELETE',
+        headers:{
+            Authorization: `Bearer ${token.value}`
+        },
     })
     await navigateTo('/admin/news')
 }

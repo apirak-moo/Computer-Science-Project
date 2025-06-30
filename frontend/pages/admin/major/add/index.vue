@@ -47,6 +47,13 @@ import type { MajorRequest } from '~/types/MajorRequest'
 import type { Degree } from '~/types/Degree'
 import type { Program } from '~/types/Program'
 
+definePageMeta({
+  middleware: 'auth',
+  roles: ['Administrator', 'Head of Department']
+})
+
+const token = useCookie('token')
+
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
 
@@ -225,6 +232,9 @@ async function submitForm() {
     await $fetch(`${apiBase}/major`, {
         method: 'POST',
         body: formData,
+        headers:{
+            Authorization: `Bearer ${token.value}`
+        },
     })
 
     ImageFile.value = null

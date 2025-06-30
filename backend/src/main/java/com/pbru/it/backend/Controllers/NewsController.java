@@ -4,9 +4,9 @@ import java.net.URI;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,10 +24,20 @@ public class NewsController {
     @GetMapping
     public ResponseEntity<Page<News>> findAll(
             @RequestParam(required = false) String search,
-            @PageableDefault(size = 8, sort = { "createdAt" }, direction = Sort.Direction.DESC) Pageable pageable) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size) {
+
+        // สร้าง Sort ด้วยหลาย field ที่มี direction ต่างกัน
+        Sort sort = Sort.by(
+                Sort.Order.desc("createdAt"),
+                Sort.Order.asc("newsImages.id"));
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
         if (search != null && !search.isEmpty()) {
             return ResponseEntity.ok(newsService.findByTitleContainingIgnoreCase(search, pageable));
         }
+
         return ResponseEntity.ok(newsService.findAll(pageable));
     }
 

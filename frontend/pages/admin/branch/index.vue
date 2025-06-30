@@ -22,6 +22,13 @@ import {
 } from '@/components/ui/dialog'
 import type { Branch } from '~/types/Branch'
 
+definePageMeta({
+  middleware: 'auth',
+  roles: ['Administrator', 'Head of Department']
+})
+
+const token = useCookie('token')
+
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
 
@@ -58,7 +65,10 @@ function toLanguage(text: string): string {
 async function updateStatus(id: number, status: boolean) {
     status = !status
     await useFetch(`${apiBase}/branch/${id}?status=${status}`, {
-        method: 'PATCH'
+        method: 'PATCH',
+        headers:{
+            Authorization: `Bearer ${token.value}`
+        },
     })
     refresh()
 }

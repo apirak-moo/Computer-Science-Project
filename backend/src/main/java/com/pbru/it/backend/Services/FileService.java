@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -62,7 +62,7 @@ public class FileService {
         }
     }
 
-    public void deleteAllByNewsImage(Set<NewsImage> newsImages) {
+    public void deleteAllByNewsImage(List<NewsImage> newsImages) {
         for (NewsImage item : newsImages) {
             deleteImageFile(item.getPath());
         }

@@ -11,31 +11,31 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    
+
     private final ProfessorRepository professorRepository;
     private final PasswordEncoder encoder;
 
     private final JWTService jwtService;
 
-    public Professor register(Professor request){
-        
-        if(professorRepository.existsByEmail(request.getEmail())){
+    public Professor register(Professor request) {
+
+        if (professorRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("User already exists");
         }
-        
+
         request.setPassword(encoder.encode(request.getPassword()));
-        
+
         return professorRepository.save(request);
 
     }
 
-    public String login(String email, String password){
+    public String login(String email, String password) {
         Professor professor = professorRepository.findByEmail(email)
-                        .orElseThrow(() -> new RuntimeException("User not found"));
-        if(!encoder.matches(password, professor.getPassword())){
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (!encoder.matches(password, professor.getPassword())) {
             throw new RuntimeException("Invalid password");
         }
-        return jwtService.generateJwtToken(professor);
+        return jwtService.generateToken(professor);
     }
 
 }

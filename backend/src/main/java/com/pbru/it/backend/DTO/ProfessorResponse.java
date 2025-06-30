@@ -1,19 +1,18 @@
 package com.pbru.it.backend.DTO;
 
+import java.util.List;
 import java.util.UUID;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.pbru.it.backend.Models.ProfessorEducationalQualification;
+import com.pbru.it.backend.Models.ProfessorResearchWorkResponse;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-public class ProfessorResponse {
-    private UUID id;
-    private String email;
-    private String password;
-    private ProfessorRole role;
-    private ProfessorProfileResponse profile;
-}
+public record ProfessorResponse(
+    UUID id,
+    String email,
+    List<PositionResponse> positions,
+    ProfessorProfileResponse profile,
+    List<ProfessorEducationalQualification> qualifications,
+    List<ProfessorResearchWorkResponse> works
+) {
+} 
 

@@ -1,8 +1,8 @@
 package com.pbru.it.backend.Models;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
 
@@ -36,7 +36,7 @@ public class News extends Auditable {
     private String detail;
 
     @OneToMany(mappedBy = "news", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<NewsImage> newsImages = new HashSet<>();
+    private List<NewsImage> newsImages = new ArrayList<>();
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     @CreatedDate

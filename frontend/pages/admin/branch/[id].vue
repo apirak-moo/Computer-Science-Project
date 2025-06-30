@@ -47,6 +47,13 @@ import type { Branch } from '~/types/Branch'
 import type { Major } from '~/types/Major'
 import type { PaginatedResponse } from '~/types/PaginatedResponse'
 
+definePageMeta({
+  middleware: 'auth',
+  roles: ['Administrator', 'Head of Department']
+})
+
+const token = useCookie('token')
+
 const route = useRoute()
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
@@ -192,6 +199,9 @@ async function submitForm() {
     await $fetch(`${apiBase}/branch/${route.params.id}`, {
         method: 'PUT',
         body: formData,
+        headers:{
+            Authorization: `Bearer ${token.value}`
+        },
     })
 
     refresh()
@@ -205,6 +215,9 @@ async function deleteForm() {
     // ✅ ส่งไปยัง API
     await $fetch(`${apiBase}/branch/${route.params.id}`, {
         method: 'DELETE',
+        headers:{
+            Authorization: `Bearer ${token.value}`
+        },
     })
 
     await navigateTo('/admin/branch')
