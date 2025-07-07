@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.pbru.it.backend.Models.ProfessorTitle;
 
 @Repository
-public interface ProfessorTitleRepository extends JpaRepository<ProfessorTitle, Long> {
-    
+public interface ProfessorTitleRepository extends JpaRepository<ProfessorTitle, Integer> {
+
 }

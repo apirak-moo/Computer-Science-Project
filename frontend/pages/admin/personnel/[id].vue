@@ -20,6 +20,8 @@ import type { Degree } from '~/types/Degree'
 import type { ProfessorTitle } from '~/types/ProfessorTitle'
 
 import FileUploader from '~/components/FileUploader.vue'
+import type { Position } from '~/types/Position'
+import type { ProfessorRequest } from '~/types/ProfessorRequest'
 
 // --- 1. การดึงข้อมูล ---
 // ใช้ useRoute() เพื่อเข้าถึงพารามิเตอร์ของ URL (เช่น id)
@@ -31,10 +33,12 @@ const apiBase = config.public.apiBase
 
 const { data: degrees } = await useFetch<Degree[]>(`${apiBase}/degree`)
 const { data: titles } = await useFetch<ProfessorTitle[]>(`${apiBase}/professor_title`)
+const { data: positions } = await useFetch<Position[]>(`${apiBase}/position`)
+
 
 // ใช้ useFetch หรือ useAsyncData เพื่อดึงข้อมูลของบุคลากรตาม id
 // *** อย่าลืมเปลี่ยน '/api/personnel/' เป็น Endpoint จริงของคุณ ***
-const { data: person, pending, error } = await useAsyncData<Professor>(
+const { data: person, pending, error, refresh } = await useAsyncData<Professor>(
     `person-${personId}`,
     () => $fetch(`${apiBase}/professor/${personId}`) // สมมติว่านี่คือ API Endpoint ของคุณ
 )
@@ -46,13 +50,12 @@ if (error.value) {
 
 // --- 2. การเตรียมข้อมูลสำหรับแสดงผล ---
 const nameFallback = computed(() => {
-    return person.value?.profile?.nameTh?.split(' ').map((n: string) => n[0]).join('').toUpperCase() ?? ''
+    return person.value?.profile?.name?.split(' ').map((n: string) => n[0]).join('').toUpperCase() ?? ''
 })
 
 const qualification = ref<ProfessorQualification>({
     university: '',
     major: '',
-    yearGraduation: '',
     degree: undefined
 })
 
@@ -61,7 +64,6 @@ async function addQualification(data: ProfessorQualification) {
         const qualification2: ProfessorQualification = {
             university: qualification.value.university,
             major: qualification.value.major,
-            yearGraduation: qualification.value.yearGraduation,
             degree: data.degree
         }
         person.value?.qualifications?.push(qualification2)
@@ -69,7 +71,6 @@ async function addQualification(data: ProfessorQualification) {
     qualification.value = {
         university: '',
         major: '',
-        yearGraduation: '',
         degree: undefined
     }
 }
@@ -83,12 +84,62 @@ async function removeQualification(data: ProfessorQualification) {
     person.value.qualifications = qualifications.filter(
         (item) => item !== data
     );
+
 }
+
+const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        ImageFile.value = file;
+    }
+};
 
 // URL สำหรับรูปภาพ (อย่าลืมเปลี่ยน)
 const imageUrl = computed(() => `${apiBase}/images/${person.value?.profile?.image ?? ''}`)
 
-const ImagesFile = ref();
+const ImageFile = ref();
+
+const updateForm = async () => {
+
+    const form = ref<ProfessorRequest>({
+        email: person.value?.email,
+        positions: person.value?.positions ,
+        qualifications: (person.value?.qualifications ?? []).map(q => ({
+            university: q.university,
+            major: q.major,
+            degreeId: q.degree?.id ?? null,
+        })), // ข้อมูลวุฒิจะถูกเก็บในนี้
+        profile: {
+            titleId: person.value?.profile?.title?.id ?? null,
+            name: person.value?.profile?.name ,
+            phone: person.value?.profile?.phone ,
+            git: person.value?.profile?.git ,
+            major: person.value?.profile?.major ,
+        },
+    })
+
+    const formData = new FormData();
+    formData.append('request', new Blob([JSON.stringify(form.value)], {
+        type: 'application/json'
+    }));
+    if (ImageFile.value) {
+        formData.append('image', ImageFile.value);
+    }
+
+    console.log('---- FormData Object ----');
+    console.log('Request Body:', JSON.stringify(form.value, null, 2));
+
+    try {
+        await $fetch(`${apiBase}/professor/${route.params.id}`, {
+            method: 'PUT',
+            body: formData,
+        });
+        refresh();
+    } catch (error) {
+        console.error('Error :', error);
+    }
+
+};
 
 </script>
 
@@ -125,7 +176,7 @@ const ImagesFile = ref();
                 <div
                     class="sticky top-24 bg-white dark:bg-gray-800/50 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700">
                     <Avatar class="w-32 h-32 mx-auto mb-4 border-4 border-white dark:border-gray-700 shadow-lg">
-                        <AvatarImage :src="imageUrl" :alt="person.profile.nameTh" class="object-cover" />
+                        <AvatarImage :src="imageUrl" :alt="person.profile.name" class="object-cover" />
                         <AvatarFallback
                             class="bg-gray-200 dark:bg-gray-600 text-4xl font-semibold text-gray-600 dark:text-gray-300">
                             {{ nameFallback }}
@@ -133,10 +184,10 @@ const ImagesFile = ref();
                     </Avatar>
 
                     <div class="text-center">
-                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ person.profile.nameTh }}</h1>
+                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ person.profile.name }}</h1>
                         <p v-if="person.positions.length > 0"
                             class="mt-1 text-base font-medium text-sky-800 dark:text-sky-400">
-                            {{ person.positions[0].nameTh }}
+                            {{ person.positions[0].name }}
                         </p>
                         <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ person.profile?.major }}</p>
                     </div>
@@ -195,12 +246,18 @@ const ImagesFile = ref();
 
                     <div>
                         <h2 class="text-lg font-semibold mb-3">ตำแหน่งทั้งหมด</h2>
-                        <ul class="space-y-2 text-sm">
+                        <!-- <ul class="space-y-2 text-sm">
                             <li v-for="pos in person.positions" :key="pos.id" class="flex items-start gap-3">
                                 <CheckCircle2 class="size-4 mt-0.5 text-sky-600 shrink-0" />
                                 <span class="text-gray-700 dark:text-gray-300">{{ pos.nameTh }}</span>
                             </li>
-                        </ul>
+                        </ul> -->
+                        <div v-for="pos in positions" :key="pos.id">
+                            <div class="flex items-center gap-3 mb-2">
+                                <input type="checkbox" v-model="person.positions" :value="pos" />
+                                <Label>{{ pos.name }}</Label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </aside>
@@ -221,7 +278,7 @@ const ImagesFile = ref();
                             class="p-6 bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
 
                             <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-6">รูปภาพโปรไฟล์</h3>
-                            <FileUploader :id="person.id" v-model="ImagesFile" />
+                            <Input type="file" @change="handleFileChange" accept="image/*" />
                             <Separator class="my-8" />
 
                             <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-6">ข้อมูลส่วนตัว</h3>
@@ -232,7 +289,7 @@ const ImagesFile = ref();
                                         <User class="size-4" /> ชื่อ-สกุล
                                     </dt>
                                     <Input type="text" class="sm:col-span-2 text-sm text-gray-900 dark:text-white"
-                                        v-model="person.profile.nameTh" />
+                                        v-model="person.profile.name" />
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-4 gap-y-1">
                                     <dt
@@ -247,7 +304,7 @@ const ImagesFile = ref();
                                             <SelectGroup>
                                                 <SelectLabel>ตำแหน่งทางวิชาการ</SelectLabel>
                                                 <SelectItem v-for="title in titles" :key="title.id" :value="title.id">
-                                                    {{ title.nameTh }}
+                                                    {{ title.name }}
                                                 </SelectItem>
                                             </SelectGroup>
                                         </SelectContent>
@@ -334,19 +391,14 @@ const ImagesFile = ref();
                                                 <Label for="major" class="text-right">สาขาวิชา</Label>
                                                 <Input id="major" v-model="qualification.major" class="col-span-3" />
                                             </div>
-                                            <div class="grid grid-cols-4 items-center gap-4">
-                                                <Label for="year" class="text-right">ปีที่จบ (ค.ศ.)</Label>
-                                                <Input id="year" v-model="qualification.yearGraduation" type="number"
-                                                    class="col-span-3" />
-                                            </div>
                                         </div>
-                                        <DialogFooter>
-                                            <Button type="submit" @click="addQualification(qualification)"
-                                                :disabled="isSubmitting">
-                                                <Loader2 v-if="isSubmitting" class="mr-2 h-4 w-4 animate-spin" />
-                                                {{ isSubmitting ? 'กำลังบันทึก...' : 'เพิ่มข้อมูล' }}
-                                            </Button>
-                                        </DialogFooter>
+                                        <DialogClose as-child>
+                                            <DialogFooter>
+                                                <Button type="submit" @click="addQualification(qualification)">
+                                                    เพิ่มข้อมูล
+                                                </Button>
+                                            </DialogFooter>
+                                        </DialogClose>
                                     </DialogContent>
                                 </Dialog>
                             </div>
@@ -361,8 +413,7 @@ const ImagesFile = ref();
                                         <div>
                                             <h4 class="font-semibold text-gray-800 dark:text-gray-100">{{
                                                 q.degree.nameTh }} - {{ q.major }}</h4>
-                                            <p class="text-sm text-gray-600 dark:text-gray-300">{{ q.university }} •
-                                                จบปี {{ q.yearGraduation }}</p>
+                                            <p class="text-sm text-gray-600 dark:text-gray-300">{{ q.university }}</p>
                                         </div>
                                     </div>
 
@@ -408,18 +459,18 @@ const ImagesFile = ref();
             <CardContent class="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <Dialog>
                     <DialogTrigger as-child>
-                        <Button variant="destructive">
+                        <Button class="cursor-pointer" variant="destructive">
                             <Trash2 class="size-4 mr-2" />
                             ลบโปรไฟล์
                         </Button>
                     </DialogTrigger>
                 </Dialog>
 
-                <Button variant="outline">
+                <Button variant="outline" class="cursor-pointer">
                     <X class="size-4 mr-2" />
                     ปิด
                 </Button>
-                <Button>
+                <Button class="cursor-pointer bg-sky-800 hover:bg-sky-900" @click="updateForm">
                     <Save class="size-4 mr-2" />
                     บันทึกการเปลี่ยนแปลง
                 </Button>

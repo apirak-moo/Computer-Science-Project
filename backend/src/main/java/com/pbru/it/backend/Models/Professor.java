@@ -54,9 +54,6 @@ public class Professor implements UserDetails {
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProfessorEducationalQualification> qualifications = new ArrayList<>();
 
-    @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProfessorResearchWork> works = new ArrayList<>();
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "position_professor",
@@ -68,33 +65,13 @@ public class Professor implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return positions.stream()
-                        .map(position -> new SimpleGrantedAuthority(position.getNameEn()))
+                        .map(position -> new SimpleGrantedAuthority(position.getName()))
                         .collect(Collectors.toSet());
     }
 
     @Override
     public String getUsername() {
         return this.email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
     }
 
 }

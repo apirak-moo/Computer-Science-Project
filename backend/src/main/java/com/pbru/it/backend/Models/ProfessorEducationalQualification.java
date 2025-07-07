@@ -34,9 +34,6 @@ public class ProfessorEducationalQualification {
     @Column(name = "professor_educational_qualification_major", length = 150, nullable = false)
     private String major;
 
-    @Column(name = "professor_educational_qualification_year_of_graduation", length = 4, nullable = false)
-    private String yearGraduation;
-
     @ManyToOne
     @JoinColumn(name = "degree_id", referencedColumnName = "degree_id", nullable = false)
     private Degree degree;

@@ -4,18 +4,16 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.pbru.it.backend.DTO.PositionResponse;
-import com.pbru.it.backend.DTO.ProfessorEducationalQualificationResponse;
-import com.pbru.it.backend.DTO.ProfessorProfileResponse;
-import com.pbru.it.backend.DTO.ProfessorResponse;
+import com.pbru.it.backend.DTO.response.PositionResponse;
+import com.pbru.it.backend.DTO.response.ProfessorEducationalQualificationResponse;
+import com.pbru.it.backend.DTO.response.ProfessorProfileResponse;
+import com.pbru.it.backend.DTO.response.ProfessorResponse;
 import com.pbru.it.backend.Models.Position;
 import com.pbru.it.backend.Models.Professor;
 import com.pbru.it.backend.Models.ProfessorEducationalQualification;
 import com.pbru.it.backend.Models.ProfessorProfile;
-import com.pbru.it.backend.Models.ProfessorResearchWork;
-import com.pbru.it.backend.Models.ProfessorResearchWorkResponse;
 import com.pbru.it.backend.Models.ProfessorTitle;
-import com.pbru.it.backend.Models.ProfessorTitleResponse;
+import com.pbru.it.backend.DTO.response.ProfessorTitleResponse;
 
 @Mapper(componentModel = "spring")
 public interface ProfessorMapper {
@@ -28,11 +26,8 @@ public interface ProfessorMapper {
 
     List<ProfessorResponse> toProfessorResponseList(List<Professor> professors);
 
-    ProfessorEducationalQualificationResponse toProfessorEducationalQualificationResponse(ProfessorEducationalQualification qualification);
-    
-    ProfessorResearchWorkResponse toProfessorResearchWorkResponse(ProfessorResearchWork work);
-
-    List<ProfessorResearchWorkResponse> toProfessorResearchWorkResponseList(List<ProfessorResearchWork> works);
+    ProfessorEducationalQualificationResponse toProfessorEducationalQualificationResponse(
+            ProfessorEducationalQualification qualification);
 
     ProfessorTitleResponse toProfessorTitleResponse(ProfessorTitle title);
 

@@ -2,7 +2,6 @@ package com.pbru.it.backend.Config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -33,12 +32,12 @@ public class WebSecurityConfig {
         return httpSecurity
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(HttpMethod.GET, "/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "position/**","professor/**", "news/**" ).authenticated()
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/**").authenticated()
-                        .requestMatchers(HttpMethod.PUT,"/**").authenticated()
-                        .requestMatchers(HttpMethod.DELETE,"/**").authenticated()
+                        // .requestMatchers(HttpMethod.GET, "/**").permitAll()
+                        // .requestMatchers(HttpMethod.GET, "position/**","professor/**", "news/**" ).authenticated()
+                        // .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        // .requestMatchers(HttpMethod.POST, "/**").authenticated()
+                        // .requestMatchers(HttpMethod.PUT,"/**").authenticated()
+                        // .requestMatchers(HttpMethod.DELETE,"/**").authenticated()
                         .anyRequest().permitAll()
                         )
                 .httpBasic(Customizer.withDefaults())

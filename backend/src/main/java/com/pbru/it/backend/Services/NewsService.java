@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.pbru.it.backend.DTO.NewsDemoRequest;
+import com.pbru.it.backend.DTO.request.NewsDemoRequest;
 import com.pbru.it.backend.Models.News;
 import com.pbru.it.backend.Models.NewsImage;
 import com.pbru.it.backend.Repositories.NewsRepository;

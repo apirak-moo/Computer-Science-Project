@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.5.0'
+	id 'org.springframework.boot' version '3.5.3'
 	id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -21,6 +21,10 @@ configurations {
 
 repositories {
 	mavenCentral()
+}
+
+ext {
+	set('springBootAdminVersion', "3.5.0")
 }
 
 dependencies {
@@ -53,6 +57,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'de.codecentric:spring-boot-admin-starter-server'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'org.postgresql:postgresql'
@@ -62,18 +67,10 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-def querydslDir = "$buildDir/generated/sources/annotationProcessor/java/main"
-
-sourceSets {
-	main {
-		java {
-			srcDirs += querydslDir
-		}
+dependencyManagement {
+	imports {
+		mavenBom "de.codecentric:spring-boot-admin-dependencies:${springBootAdminVersion}"
 	}
-}
-
-tasks.withType(JavaCompile).configureEach {
-	options.annotationProcessorGeneratedSourcesDirectory = file(querydslDir)
 }
 
 tasks.named('test') {

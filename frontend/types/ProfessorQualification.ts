@@ -1,9 +1,9 @@
 import type { Degree } from "./Degree";
 
 export interface ProfessorQualification {
-    id?: number;
+    id?: number | null;
     university: string;
     major: string;
-    yearGraduation: string;
     degree?: Degree | undefined
+    degreeId?: number | null;
 }

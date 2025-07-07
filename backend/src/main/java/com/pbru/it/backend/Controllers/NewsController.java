@@ -10,7 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.pbru.it.backend.DTO.NewsDemoRequest;
+import com.pbru.it.backend.DTO.request.NewsDemoRequest;
 import com.pbru.it.backend.Models.News;
 import com.pbru.it.backend.Services.NewsService;
 

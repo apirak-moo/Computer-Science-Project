@@ -23,10 +23,10 @@ import {
     ChevronRight,
 } from 'lucide-vue-next'
 
-definePageMeta({
-  middleware: 'auth',
-  roles: ['Administrator']
-})
+// definePageMeta({
+//   middleware: 'auth',
+//   roles: ['Administrator']
+// })
 
 // Define the structure for our management items
 const managementItems = [

@@ -21,9 +21,6 @@ public class Position {
     private int id;
 
     @Column(name = "position_name_th", length = 100, nullable = false)
-    private String nameTh;
-
-    @Column(name = "position_name_en", length = 100, nullable = false)
-    private String nameEn;
+    private String name;
 
 }

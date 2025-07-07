@@ -1,14 +1,9 @@
-import type { ProfessorExpertiseRequest } from "./ProfessorExpertiseRequest";
-
 export interface ProfessorProfileRequest {
     id?: number;
-    titleId: number;
-    nameTh: string;
-    nameEn: string;
-    birthday: Date;
+    titleId: number | null;
+    name: string;
     phone: string;
     git: string;
     major: string;
-    image: File | undefined
-    expertises: ProfessorExpertiseRequest[] | []
+    image?: File | undefined
 }

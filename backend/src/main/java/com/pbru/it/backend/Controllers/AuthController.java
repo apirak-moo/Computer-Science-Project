@@ -14,10 +14,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.pbru.it.backend.DTO.LoginRequest;
-import com.pbru.it.backend.Models.Professor;
+import com.pbru.it.backend.DTO.request.LoginRequest;
+import com.pbru.it.backend.DTO.request.ProfessorRequest;
+import com.pbru.it.backend.DTO.response.ProfessorResponse;
 import com.pbru.it.backend.Services.AuthService;
 import com.pbru.it.backend.Services.JWTService;
 
@@ -37,9 +40,16 @@ public class AuthController {
     private final UserDetailsService userDetailsService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody Professor request) {
-        Professor save = authService.register(request);
-        URI location = URI.create("/professor/" + save.getId());
+    public ResponseEntity<?> register(
+            @RequestPart("request") ProfessorRequest request, // Expects a JSON part named "request"
+            @RequestPart(value = "image", required = false) MultipartFile image // Expects a file part named "image"
+    ) {
+        // Manually set the image from the separate multipart file part
+        if (image != null && !image.isEmpty()) {
+            request.getProfile().setImage(image);
+        }
+        ProfessorResponse save = authService.register(request);
+        URI location = URI.create("/professor/" + save.id());
         return ResponseEntity.created(location).body(save);
     }
 

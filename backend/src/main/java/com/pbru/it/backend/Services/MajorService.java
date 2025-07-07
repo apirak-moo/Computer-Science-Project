@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.pbru.it.backend.DTO.MajorRequest;
+import com.pbru.it.backend.DTO.request.MajorRequest;
 import com.pbru.it.backend.Models.Major;
 import com.pbru.it.backend.Models.MajorCourse;
 import com.pbru.it.backend.Models.Program;

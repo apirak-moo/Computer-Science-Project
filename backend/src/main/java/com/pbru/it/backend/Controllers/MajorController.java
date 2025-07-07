@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pbru.it.backend.DTO.MajorRequest;
+import com.pbru.it.backend.DTO.request.MajorRequest;
 import com.pbru.it.backend.Models.Major;
 import com.pbru.it.backend.Services.MajorService;
 

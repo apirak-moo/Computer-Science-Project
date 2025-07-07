@@ -29,13 +29,10 @@ public class ProfessorTitle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "professor_title_id")
-    private Long id;
+    private int id;
 
-    @Column(name = "professor_title_name_th", length = 100, nullable = false)
-    private String nameTh;
-
-    @Column(name = "professor_title_name_en", length = 100, nullable = false)
-    private String nameEn;
+    @Column(name = "professor_title_name", length = 100, nullable = false)
+    private String name;
 
     @JsonIgnore
     @OneToMany(mappedBy = "title", cascade = CascadeType.ALL, orphanRemoval = true)

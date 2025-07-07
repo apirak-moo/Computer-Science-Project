@@ -1,8 +1,8 @@
 package com.pbru.it.backend.Controllers;
 
-import com.pbru.it.backend.DTO.BranchMiniResponse;
-import com.pbru.it.backend.DTO.BranchRequest;
-import com.pbru.it.backend.DTO.BranchResponse;
+import com.pbru.it.backend.DTO.response.BranchMiniResponse;
+import com.pbru.it.backend.DTO.request.BranchRequest;
+import com.pbru.it.backend.DTO.response.BranchResponse;
 import com.pbru.it.backend.Models.Branch;
 import com.pbru.it.backend.Services.BranchService;
 import org.springframework.beans.factory.annotation.Autowired;
