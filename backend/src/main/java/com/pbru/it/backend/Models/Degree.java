@@ -13,11 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "degrees")
 public class Degree {
@@ -40,5 +36,57 @@ public class Degree {
     @JsonIgnore
     @OneToMany(mappedBy = "degree", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProfessorEducationalQualification> qualifications = new HashSet<>();
+
+    public Degree() {
+    }
+
+    public Degree(int id, String nameTh, String nameEn, Set<Program> programs,
+            Set<ProfessorEducationalQualification> qualifications) {
+        this.id = id;
+        this.nameTh = nameTh;
+        this.nameEn = nameEn;
+        this.programs = programs;
+        this.qualifications = qualifications;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNameTh() {
+        return nameTh;
+    }
+
+    public void setNameTh(String nameTh) {
+        this.nameTh = nameTh;
+    }
+
+    public String getNameEn() {
+        return nameEn;
+    }
+
+    public void setNameEn(String nameEn) {
+        this.nameEn = nameEn;
+    }
+
+    public Set<Program> getPrograms() {
+        return programs;
+    }
+
+    public void setPrograms(Set<Program> programs) {
+        this.programs = programs;
+    }
+
+    public Set<ProfessorEducationalQualification> getQualifications() {
+        return qualifications;
+    }
+
+    public void setQualifications(Set<ProfessorEducationalQualification> qualifications) {
+        this.qualifications = qualifications;
+    }
 
 }

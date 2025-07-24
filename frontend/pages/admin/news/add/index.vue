@@ -6,10 +6,10 @@ import CardContent from '~/components/ui/card/CardContent.vue';
 import { Save } from 'lucide-vue-next';
 import type { NewsRequest } from '~/types/NewsRequest';
 
-// definePageMeta({
-//   middleware: 'auth',
-//   roles: ['Administrator', 'Associate Dean of the Faculty of Information Technology']
-// })
+definePageMeta({
+  middleware: 'auth',
+  roles: ['ผู้ดูแล','รองคณะบดีคณะเทคโนโลยีสารสนเทศ']
+})
 
 const token = useCookie('token')
 
@@ -43,9 +43,9 @@ async function submitForm() {
     await $fetch(`${apiBase}/news`,{
         method: 'POST',
         body: formData,
-        // headers:{
-        //     Authorization: `Bearer ${token.value}`
-        // },
+        headers:{
+            Authorization: `Bearer ${token.value}`
+        },
     })
 
     ImageFile.value = null

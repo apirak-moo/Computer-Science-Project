@@ -3,12 +3,10 @@ import type { PaginatedResponse } from '~/types/PaginatedResponse';
 import type { Professor } from '~/types/Professor';
 import PersonnelCard from '~/components/PersonnelCard.vue';
 
-// definePageMeta({
-//     middleware: 'auth',
-//     roles: ['Administrator', 'Dean of the Faculty of Information Technology']
-// })
-
-const token = useCookie('token')
+definePageMeta({
+    middleware: 'auth',
+    roles: ['ผู้ดูแล']
+})
 
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
@@ -48,7 +46,7 @@ watch([currentPage, search], () => {
                 <Input class="col-span-4 md:col-span-5" type="text" v-model="search" placeholder="ค้นหาสาขาวิชา" />
                 <NuxtLink to="/admin/personnel/add">
                     <Button class="col-span-2 w-full md:col-span-1 bg-sky-700 hover:bg-sky-800 cursor-pointer">
-                        เพิ่มข่าวสาร
+                        เพิ่มบุคลากร
                     </Button>
                 </NuxtLink>
             </CardContent>
@@ -56,7 +54,7 @@ watch([currentPage, search], () => {
             <CardContent class="grid grid-cols-1 gap-6 p-4 sm:grid-cols-2 md:p-6 lg:grid-cols-3 xl:grid-cols-4">
                 <div v-for="professor in professors?.content" :key="professor.id">
                     <PersonnelCard class="h-full" :id="professor.id" :name="professor.profile?.name"
-                        :major="professor.profile?.major" :positions="professor.positions"
+                        :major="professor.profile?.major" :positions="professor.positions ?? []"
                         :image-url="professor.profile?.image" />
                 </div>
             </CardContent>

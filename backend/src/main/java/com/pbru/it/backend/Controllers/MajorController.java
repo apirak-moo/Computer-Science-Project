@@ -1,6 +1,7 @@
 package com.pbru.it.backend.Controllers;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pbru.it.backend.DTO.request.MajorRequest;
+import com.pbru.it.backend.Models.CourseLanguage;
 import com.pbru.it.backend.Models.Major;
 import com.pbru.it.backend.Services.MajorService;
 
@@ -39,8 +41,9 @@ public class MajorController {
             @RequestParam(required = false) String nameEn,
             @RequestParam(required = false) Integer degreeId,
             @RequestParam(required = false) Boolean status,
+            @RequestParam(required = false) CourseLanguage language,
             @PageableDefault(size = 8, sort = { "status" ,"id" , "program.id" , "nameEn" }, direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(majorService.filter(nameTh,nameEn,degreeId,status,pageable));
+        return ResponseEntity.ok(majorService.filter(nameTh,nameEn,degreeId,status,language,pageable));
     }
 
     @GetMapping("/{id}")
@@ -49,6 +52,16 @@ public class MajorController {
         if (major.isPresent())
             return ResponseEntity.ok(major);
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/distinct/nameTh")
+    public ResponseEntity<List<String>> getAllDistinctMajorName() {
+        return ResponseEntity.ok(majorService.getAllDistinctMajorName());
+    }
+    
+    @GetMapping("/count")
+    public int getCountMajor(){
+        return majorService.getCountMajor();
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

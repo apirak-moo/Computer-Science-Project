@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Mail, CheckCircle2, GraduationCap, User, Briefcase, Info, Landmark, Github, Smartphone, Plus, Trash2, Loader2, X, Save } from 'lucide-vue-next'
+import { Mail, GraduationCap, User, Briefcase, Info, Landmark, Github, Smartphone, Plus, Trash2, X, Save } from 'lucide-vue-next'
 import type { Professor } from '~/types/Professor'
 
 import {
@@ -19,9 +19,15 @@ import type { ProfessorQualification } from '~/types/ProfessorQualification'
 import type { Degree } from '~/types/Degree'
 import type { ProfessorTitle } from '~/types/ProfessorTitle'
 
-import FileUploader from '~/components/FileUploader.vue'
 import type { Position } from '~/types/Position'
 import type { ProfessorRequest } from '~/types/ProfessorRequest'
+
+definePageMeta({
+    middleware: 'auth',
+    roles: ['ผู้ดูแล']
+})
+
+const token = useCookie('token')
 
 // --- 1. การดึงข้อมูล ---
 // ใช้ useRoute() เพื่อเข้าถึงพารามิเตอร์ของ URL (เช่น id)
@@ -103,7 +109,7 @@ const updateForm = async () => {
 
     const form = ref<ProfessorRequest>({
         email: person.value?.email,
-        positions: person.value?.positions ,
+        positions: person.value?.positions,
         qualifications: (person.value?.qualifications ?? []).map(q => ({
             university: q.university,
             major: q.major,
@@ -111,10 +117,10 @@ const updateForm = async () => {
         })), // ข้อมูลวุฒิจะถูกเก็บในนี้
         profile: {
             titleId: person.value?.profile?.title?.id ?? null,
-            name: person.value?.profile?.name ,
-            phone: person.value?.profile?.phone ,
-            git: person.value?.profile?.git ,
-            major: person.value?.profile?.major ,
+            name: person.value?.profile?.name,
+            phone: person.value?.profile?.phone,
+            git: person.value?.profile?.git,
+            major: person.value?.profile?.major,
         },
     })
 
@@ -133,6 +139,9 @@ const updateForm = async () => {
         await $fetch(`${apiBase}/professor/${route.params.id}`, {
             method: 'PUT',
             body: formData,
+            headers: {
+                Authorization: `Bearer ${token.value}`
+            },
         });
         refresh();
     } catch (error) {
@@ -140,6 +149,20 @@ const updateForm = async () => {
     }
 
 };
+
+const deleteForm = async () => {
+    try {
+        await $fetch(`${apiBase}/professor/${route.params.id}`, {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${token.value}`
+            },
+        })
+        await navigateTo('/admin/personnel')
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 </script>
 
@@ -456,7 +479,7 @@ const updateForm = async () => {
             </main>
         </div>
         <Card class="mt-6">
-            <CardContent class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <CardContent class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <Dialog>
                     <DialogTrigger as-child>
                         <Button class="cursor-pointer" variant="destructive">
@@ -464,16 +487,45 @@ const updateForm = async () => {
                             ลบโปรไฟล์
                         </Button>
                     </DialogTrigger>
-                </Dialog>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>ยืนยันการลบข้อมูล?</DialogTitle>
+                            <DialogDescription>
+                                คุณต้องการลบข้อมูลโปรไฟล์หรือไม่
+                            </DialogDescription>
+                        </DialogHeader>
+                        <DialogClose as-child>
+                            <DialogFooter>
+                                <Button @click="deleteForm"
+                                    class="bg-red-600 hover:bg-red-700 cursor-pointer">ยืนยันการลบ</Button>
+                            </DialogFooter>
+                        </DialogClose>
 
-                <Button variant="outline" class="cursor-pointer">
-                    <X class="size-4 mr-2" />
-                    ปิด
-                </Button>
-                <Button class="cursor-pointer bg-sky-800 hover:bg-sky-900" @click="updateForm">
-                    <Save class="size-4 mr-2" />
-                    บันทึกการเปลี่ยนแปลง
-                </Button>
+                    </DialogContent>
+                </Dialog>
+                <Dialog>
+                    <DialogTrigger as-child>
+                        <Button class="cursor-pointer bg-sky-800 hover:bg-sky-900">
+                            <Save class="size-4 mr-2" />
+                            บันทึกการเปลี่ยนแปลง
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>ยืนยันการแก้ไขข้อมูล?</DialogTitle>
+                            <DialogDescription>
+                                คุณต้องการแก้ไขข้อมูลโปรไฟล์หรือไม่
+                            </DialogDescription>
+                        </DialogHeader>
+                        <DialogClose as-child>
+                            <DialogFooter>
+                                <Button @click="updateForm"
+                                    class="cursor-pointer bg-sky-800 hover:bg-sky-900">บันทึกการแก้ไขข้อมูล</Button>
+                            </DialogFooter>
+                        </DialogClose>
+
+                    </DialogContent>
+                </Dialog>
             </CardContent>
         </Card>
     </div>

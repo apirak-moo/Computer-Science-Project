@@ -24,15 +24,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "professors")
 public class Professor implements UserDetails {
@@ -54,6 +46,59 @@ public class Professor implements UserDetails {
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProfessorEducationalQualification> qualifications = new ArrayList<>();
 
+    public Professor(UUID id, String email, String password, ProfessorProfile profile,
+            List<ProfessorEducationalQualification> qualifications, Set<Position> positions) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.profile = profile;
+        this.qualifications = qualifications;
+        this.positions = positions;
+    }
+
+    public Professor() {
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public ProfessorProfile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(ProfessorProfile profile) {
+        this.profile = profile;
+    }
+
+    public List<ProfessorEducationalQualification> getQualifications() {
+        return qualifications;
+    }
+
+    public void setQualifications(List<ProfessorEducationalQualification> qualifications) {
+        this.qualifications = qualifications;
+    }
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "position_professor",
@@ -72,6 +117,14 @@ public class Professor implements UserDetails {
     @Override
     public String getUsername() {
         return this.email;
+    }
+
+    public Set<Position> getPositions() {
+        return positions;
+    }
+
+    public void setPositions(Set<Position> positions) {
+        this.positions = positions;
     }
 
 }

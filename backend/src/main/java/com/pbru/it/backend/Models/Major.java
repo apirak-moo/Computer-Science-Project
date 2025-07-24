@@ -18,15 +18,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+import lombok.EqualsAndHashCode;
+
 @Builder
 @Entity
 @Table(name = "majors")
@@ -76,5 +71,121 @@ public class Major {
     @Builder.Default
     @OneToMany(mappedBy = "major", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Branch> branches = new HashSet<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Program getProgram() {
+        return program;
+    }
+
+    public void setProgram(Program program) {
+        this.program = program;
+    }
+
+    public String getNameTh() {
+        return nameTh;
+    }
+
+    public void setNameTh(String nameTh) {
+        this.nameTh = nameTh;
+    }
+
+    public String getNameEn() {
+        return nameEn;
+    }
+
+    public void setNameEn(String nameEn) {
+        this.nameEn = nameEn;
+    }
+
+    public BigDecimal getTuitionFees() {
+        return tuitionFees;
+    }
+
+    public void setTuitionFees(BigDecimal tuitionFees) {
+        this.tuitionFees = tuitionFees;
+    }
+
+    public CourseLanguage getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(CourseLanguage language) {
+        this.language = language;
+    }
+
+    public Set<MajorCourse> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(Set<MajorCourse> courses) {
+        this.courses = courses;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getCareers() {
+        return careers;
+    }
+
+    public void setCareers(String careers) {
+        this.careers = careers;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public Set<Branch> getBranches() {
+        return branches;
+    }
+
+    public void setBranches(Set<Branch> branches) {
+        this.branches = branches;
+    }
+
+    public Major(Long id, Program program, String nameTh, String nameEn, BigDecimal tuitionFees,
+            CourseLanguage language, Set<MajorCourse> courses, String image, String description, String careers,
+            Boolean status, Set<Branch> branches) {
+        this.id = id;
+        this.program = program;
+        this.nameTh = nameTh;
+        this.nameEn = nameEn;
+        this.tuitionFees = tuitionFees;
+        this.language = language;
+        this.courses = courses;
+        this.image = image;
+        this.description = description;
+        this.careers = careers;
+        this.status = status;
+        this.branches = branches;
+    }
+
+    public Major() {
+    }
 
 }

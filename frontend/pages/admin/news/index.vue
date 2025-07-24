@@ -11,12 +11,10 @@ import {
     CardTitle,
 } from '@/components/ui/card'
 
-// definePageMeta({
-//   middleware: 'auth',
-//   roles: ['Administrator', 'Associate Dean of the Faculty of Information Technology']
-// })
-
-const token = useCookie('token')
+definePageMeta({
+  middleware: 'auth',
+  roles: ['ผู้ดูแล','รองคณะบดีคณะเทคโนโลยีสารสนเทศ']
+})
 
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase

@@ -1,23 +1,5 @@
 <script setup lang="ts">
 
-import {
-    Tabs,
-    TabsContent,
-    TabsList,
-    TabsTrigger,
-} from '@/components/ui/tabs'
-
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table'
-
-import { Separator } from '@/components/ui/separator'
-
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import {
@@ -49,7 +31,7 @@ import type { Program } from '~/types/Program'
 
 definePageMeta({
   middleware: 'auth',
-  roles: ['Administrator', 'Head of Department']
+  roles: ['ผู้ดูแล', 'ประธานสาขาวิชา']
 })
 
 const token = useCookie('token')

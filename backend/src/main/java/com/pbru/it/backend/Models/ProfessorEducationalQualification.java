@@ -10,17 +10,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Table(name = "professor_educational_qualification")
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
 public class ProfessorEducationalQualification {
     
     @Id
@@ -42,5 +34,57 @@ public class ProfessorEducationalQualification {
     @ManyToOne
     @JoinColumn(name = "professor_id", referencedColumnName = "professor_id", nullable = false)
     private Professor professor;
+
+    public ProfessorEducationalQualification() {
+    }
+
+    public ProfessorEducationalQualification(Long id, String university, String major, Degree degree,
+            Professor professor) {
+        this.id = id;
+        this.university = university;
+        this.major = major;
+        this.degree = degree;
+        this.professor = professor;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUniversity() {
+        return university;
+    }
+
+    public void setUniversity(String university) {
+        this.university = university;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
+
+    public Degree getDegree() {
+        return degree;
+    }
+
+    public void setDegree(Degree degree) {
+        this.degree = degree;
+    }
+
+    public Professor getProfessor() {
+        return professor;
+    }
+
+    public void setProfessor(Professor professor) {
+        this.professor = professor;
+    }
 
 }

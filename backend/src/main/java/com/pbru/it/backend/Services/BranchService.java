@@ -12,6 +12,8 @@ import com.pbru.it.backend.Repositories.MajorRepository;
 import com.querydsl.core.BooleanBuilder;
 
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.Wildcard;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,9 @@ public class BranchService {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private JPAQueryFactory jpaQueryFactory;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -113,6 +118,15 @@ public class BranchService {
         Branch branch = branchRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
         return modelMapper.map(branch, BranchResponse.class);
+    }
+
+    public int getCountBranch() {
+        QBranch branch = QBranch.branch;
+        Long count = jpaQueryFactory.select(Wildcard.count)
+                    .from(branch)
+                    .where(branch.status.eq(true))
+                    .fetchOne();
+        return count != null ? count.intValue() : 0;
     }
 
     @Transactional

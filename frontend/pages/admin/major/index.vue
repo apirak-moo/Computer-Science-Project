@@ -24,8 +24,8 @@ import type { PaginatedResponse } from '~/types/PaginatedResponse'
 import type { Major } from '~/types/Major'
 
 definePageMeta({
-    middleware: ['auth'],
-    roles: ['Administrator', 'Head of Department']
+  middleware: 'auth',
+  roles: ['ผู้ดูแล', 'ประธานสาขาวิชา']
 })
 
 const token = useCookie('token')

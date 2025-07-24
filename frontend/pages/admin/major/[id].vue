@@ -49,7 +49,7 @@ import type { Program } from '~/types/Program'
 
 definePageMeta({
   middleware: 'auth',
-  roles: ['Administrator', 'Head of Department']
+  roles: ['ผู้ดูแล', 'ประธานสาขาวิชา']
 })
 
 const token = useCookie('token')

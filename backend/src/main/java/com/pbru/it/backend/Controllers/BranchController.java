@@ -38,6 +38,10 @@ public class BranchController {
         return ResponseEntity.ok(branchService.filterMiniBranch(status));
     }
     
+    @GetMapping("/count")
+    public int getCountMajor(){
+        return branchService.getCountBranch();
+    }
 
     @PostMapping
     public ResponseEntity<Branch> save(@ModelAttribute BranchRequest branchRequest) {

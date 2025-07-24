@@ -18,6 +18,13 @@ import QualificationForm from '~/components/QualificationForm.vue';
 
 import type { ProfessorRequest } from '~/types/ProfessorRequest';
 
+definePageMeta({
+  middleware: 'auth',
+  roles: ['ผู้ดูแล']
+})
+
+const token = useCookie('token')
+
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
 const { data: titles } = await useFetch(`${apiBase}/professor_title`);
@@ -96,7 +103,9 @@ const handleSubmit = async () => {
     const response = await $fetch(`${apiBase}/auth/register`, {
       method: 'POST',
       body: body,
-      // ไม่ต้องตั้งค่า header 'Content-Type' เอง Browser จะจัดการให้
+      headers: {
+        Authorization: `Bearer ${token.value}`
+      },
     });
 
     successMessage.value = `Registration successful! Professor ID: ${response.id}`;

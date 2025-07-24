@@ -20,9 +20,7 @@ const submitForm = async () => {
 
     // ใช้ useCookie เพื่อเก็บ token ฝั่ง client
     const token = useCookie('token', {
-      maxAge: 60 * 60 * 24 * 7, // 7 วัน
-      secure: true,             // ถ้าใช้ HTTPS
-      sameSite: 'lax'           // ป้องกันบางกรณีของ CSRF
+      maxAge: 60 * 60 * 3, // 3 ชั่วโมง
     })
 
     token.value = response.token

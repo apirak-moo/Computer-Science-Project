@@ -43,6 +43,14 @@ useHead({
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
 
+const { data: majorCount } = await useAsyncData('majorCount', 
+    () => $fetch(`${apiBase}/major/count`)
+)
+
+const { data: branchCount } = await useAsyncData('branchCount', 
+    () => $fetch(`${apiBase}/branch/count`)
+)
+
 const currentPage = ref<number>(1);
 const itemsPerPage: number = 4;
 
@@ -94,22 +102,22 @@ const { data: news, status, refresh } = await useFetch<PaginatedResponse<News>>(
                             }" a11y>
                             <SwiperSlide class="flex justify-center">
                                 <NuxtImg width="400" height="400" src="/269257865_11242840.svg" format="webp"
-                                    densities="x1 x2" alt="Image 1" class="swiper-lazy" />
+                                    densities="x1 x2" alt="Image 1" loading="eager" />
                             </SwiperSlide>
 
                             <SwiperSlide class="flex justify-center">
                                 <NuxtImg width="400" height="400" src="/12980818_5102165.png" format="webp"
-                                    densities="x1 x2" alt="Image 2" class="swiper-lazy" />
+                                    densities="x1 x2" alt="Image 2" loading="eager" />
                             </SwiperSlide>
 
                             <SwiperSlide class="flex justify-center">
                                 <NuxtImg width="400" height="400" src="/11436087_4709727.svg" format="webp"
-                                    densities="x1 x2" alt="Image 3" class="swiper-lazy" />
+                                    densities="x1 x2" alt="Image 3" loading="eager" />
                             </SwiperSlide>
 
                             <SwiperSlide class="flex justify-center">
                                 <NuxtImg width="400" height="400" src="/11435030_4706237.svg" format="webp"
-                                    densities="x1 x2" alt="Image 4" class="swiper-lazy"  />
+                                    densities="x1 x2" alt="Image 4" loading="eager"  />
                             </SwiperSlide>
                         </Swiper>
                     </div>
@@ -151,7 +159,7 @@ const { data: news, status, refresh } = await useFetch<PaginatedResponse<News>>(
                         </div>
                         <span class="text-gray-600 text-sm">สาขาวิชา</span>
                     </div>
-                    <h1 class="text-2xl font-semibold text-gray-800 group-hover:text-sky-500">3</h1>
+                    <h1 class="text-2xl font-semibold text-gray-800 group-hover:text-sky-500">{{ majorCount }}</h1>
                     <p class="text-sm text-gray-600 mt-1">ตอบโจทย์ตลาดแรงงานความต้องการสูง</p>
                 </NuxtLink>
 
@@ -167,7 +175,7 @@ const { data: news, status, refresh } = await useFetch<PaginatedResponse<News>>(
                         </div>
                         <span class="text-gray-600 text-sm">แขนงวิชา</span>
                     </div>
-                    <h1 class="text-2xl font-semibold text-gray-800 group-hover:text-sky-500">6</h1>
+                    <h1 class="text-2xl font-semibold text-gray-800 group-hover:text-sky-500">{{ branchCount }}</h1>
                     <p class="text-sm text-gray-600 mt-1">แขนงวิชาที่เป็นตัวคุณ</p>
                 </NuxtLink>
             </div>

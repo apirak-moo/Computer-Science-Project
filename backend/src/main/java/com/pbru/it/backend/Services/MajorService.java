@@ -2,6 +2,7 @@ package com.pbru.it.backend.Services;
 
 import java.io.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -10,6 +11,9 @@ import com.opencsv.exceptions.CsvValidationException;
 import com.pbru.it.backend.Models.QMajor;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.Wildcard;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.pbru.it.backend.DTO.request.MajorRequest;
+import com.pbru.it.backend.Models.CourseLanguage;
 import com.pbru.it.backend.Models.Major;
 import com.pbru.it.backend.Models.MajorCourse;
 import com.pbru.it.backend.Models.Program;
@@ -34,13 +39,16 @@ public class MajorService {
     private ProgramRepository programRepository;
 
     @Autowired
+    private JPAQueryFactory jpaQueryFactory;
+
+    @Autowired
     private FileService fileService;
 
     public Page<Major> findAll(Pageable pageable) {
         return majorRepository.findAll(pageable);
     }
 
-    public Page<Major> filter(String nameTh, String nameEn, Integer degreeId, Boolean status, Pageable pageable) {
+    public Page<Major> filter(String nameTh, String nameEn, Integer degreeId, Boolean status, CourseLanguage language, Pageable pageable) {
 
         QMajor major = QMajor.major;
         BooleanBuilder builder = new BooleanBuilder();
@@ -55,6 +63,10 @@ public class MajorService {
 
         if (degreeId != null) {
             builder.and(major.program.degree.id.eq(degreeId));
+        }
+
+        if(language != null) {
+            builder.and(major.language.eq(language));
         }
 
         if (status != null) {
@@ -72,6 +84,25 @@ public class MajorService {
 
         return majorRepository.findAll(pageable);
 
+    }
+
+    public int getCountMajor() {
+        QMajor major = QMajor.major;
+        Long count = jpaQueryFactory.select(Wildcard.count)
+                    .from(major)
+                    .where(major.status.eq(true))
+                    .fetchOne();
+        return count != null ? count.intValue() : 0;
+    }
+
+    public List<String> getAllDistinctMajorName(){
+        QMajor major = QMajor.major;
+        List<String> majors = jpaQueryFactory.select(major.nameTh)
+                .from(major)
+                .distinct()
+                .where(major.status.isTrue(), major.program.degree.nameEn.containsIgnoreCase("Bachelor's Degree"))
+                .fetch();      
+        return majors; 
     }
 
     public Page<Major> findByNameThContainingIgnoreCaseOrNameEnContainingIgnoreCase(String nameTh, String nameEn,

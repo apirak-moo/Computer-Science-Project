@@ -13,15 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
 @Table(name = "professor_title")
 @Entity
 public class ProfessorTitle {
@@ -37,5 +29,38 @@ public class ProfessorTitle {
     @JsonIgnore
     @OneToMany(mappedBy = "title", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProfessorProfile> profiles = new ArrayList<>();
+
+    public ProfessorTitle() {
+    }
+
+    public ProfessorTitle(int id, String name, List<ProfessorProfile> profiles) {
+        this.id = id;
+        this.name = name;
+        this.profiles = profiles;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<ProfessorProfile> getProfiles() {
+        return profiles;
+    }
+
+    public void setProfiles(List<ProfessorProfile> profiles) {
+        this.profiles = profiles;
+    }
 
 }

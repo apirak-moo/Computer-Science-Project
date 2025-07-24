@@ -11,7 +11,7 @@ import {
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
 
-const { data: branchs, status } = await useFetch(`${apiBase}/branch/mini`)
+const { data: branchs, status } = await useFetch(`${apiBase}/branch/mini?status=true`)
 
 const search = ref('')
 

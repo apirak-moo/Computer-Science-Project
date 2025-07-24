@@ -14,11 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "programs")
 public class Program {
@@ -41,5 +37,56 @@ public class Program {
     @JsonIgnore
     @OneToMany(mappedBy = "program", cascade = CascadeType.ALL)
     private Set<Major> majors;
+
+    public Program() {
+    }
+
+    public Program(Long id, String nameTh, String nameEn, Degree degree, Set<Major> majors) {
+        this.id = id;
+        this.nameTh = nameTh;
+        this.nameEn = nameEn;
+        this.degree = degree;
+        this.majors = majors;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNameTh() {
+        return nameTh;
+    }
+
+    public void setNameTh(String nameTh) {
+        this.nameTh = nameTh;
+    }
+
+    public String getNameEn() {
+        return nameEn;
+    }
+
+    public void setNameEn(String nameEn) {
+        this.nameEn = nameEn;
+    }
+
+    public Degree getDegree() {
+        return degree;
+    }
+
+    public void setDegree(Degree degree) {
+        this.degree = degree;
+    }
+
+    public Set<Major> getMajors() {
+        return majors;
+    }
+
+    public void setMajors(Set<Major> majors) {
+        this.majors = majors;
+    }
 
 }

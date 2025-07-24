@@ -7,10 +7,10 @@ import type { News } from '~/types/News';
 
 import { Save, Trash2 } from 'lucide-vue-next';
 
-// definePageMeta({
-//   middleware: 'auth',
-//   roles: ['Administrator', 'Associate Dean of the Faculty of Information Technology']
-// })
+definePageMeta({
+  middleware: 'auth',
+  roles: ['ผู้ดูแล','รองคณะบดีคณะเทคโนโลยีสารสนเทศ']
+})
 
 const token = useCookie('token')
 
