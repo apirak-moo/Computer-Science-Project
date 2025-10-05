@@ -14,7 +14,7 @@
 
 - **Docker Desktop:** [ดาวน์โหลด](https://www.docker.com/products/docker-desktop/)
 - **Bun:** [ติดตั้ง](https://bun.sh/docs/installation)
-- **Java Development Kit (JDK):** แนะนำเวอร์ชัน 17 หรือสูงกว่า
+- **Java Development Kit (JDK):** แนะนำเวอร์ชัน 21 หรือสูงกว่า [ดาวน์โหลด](https://adoptium.net/)
 - **DBeaver (หรือโปรแกรมจัดการฐานข้อมูลอื่น):** [ดาวน์โหลด](https://dbeaver.io/download/)
 
 ---
